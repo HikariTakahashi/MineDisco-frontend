@@ -6,11 +6,12 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare || true"
+    "preview": "nuxt preview"
   },
   "optionalDependencies": {
-    "@oxc-parser/binding-linux-x64-gnu": "^0.95.0"
+    "@oxc-parser/binding-linux-x64-gnu": "^0.95.0",
+    "@oxc-transform/binding-linux-x64-gnu": "^0.95.0",
+    "@oxc-minify/binding-linux-x64-gnu": "^0.95.0"
   },
   "dependencies": {
     "@nuxt/content": "3.8.0",
