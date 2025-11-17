@@ -6,4 +6,12 @@ export default defineNuxtConfig({
   modules: ["@nuxt/content", "@nuxt/eslint", "@nuxt/image", "@nuxt/ui"],
 
   css: ["~/assets/css/main.css"],
+
+  runtimeConfig: {
+    // サーバー側でのみ使用可能
+    public: {
+      // クライアント側でも使用可能（NUXT_PUBLIC_ プレフィックス付き）
+      cloudflareTunnelUrl: process.env.NUXT_PUBLIC_CLOUDFLARE_TUNNEL_URL || "",
+    },
+  },
 });
