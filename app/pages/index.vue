@@ -28,6 +28,7 @@
 <script setup>
 const route = useRoute();
 const router = useRouter();
+const config = useRuntimeConfig();
 const productNumber = ref(null);
 const isLoading = ref(false);
 
@@ -37,21 +38,26 @@ const handleClick = async () => {
     return;
   }
 
+  if (!config.public.cloudflareTunnelUrl) {
+    console.error("Cloudflare Tunnel URL is not configured.");
+    alert(
+      "Cloudflare Tunnel URLが設定されていません。環境変数を確認してください。"
+    );
+    return;
+  }
+
   try {
     isLoading.value = true;
 
-    const response = await fetch(
-      "https://mathematics-coverage-suzuki-implications.trycloudflare.com/",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          productNumber: productNumber.value,
-        }),
-      }
-    );
+    const response = await fetch(config.public.cloudflareTunnelUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productNumber: productNumber.value,
+      }),
+    });
 
     if (!response.ok) {
       console.error(
