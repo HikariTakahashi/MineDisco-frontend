@@ -7,6 +7,10 @@ export default defineNuxtConfig({
 
   css: ["~/assets/css/main.css"],
 
+  nitro: {
+    preset: "cloudflare-pages",
+  },
+
   runtimeConfig: {
     // サーバー側でのみ使用可能
     public: {
