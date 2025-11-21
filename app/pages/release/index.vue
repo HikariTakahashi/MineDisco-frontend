@@ -94,20 +94,11 @@
 </template>
 
 <script setup>
-const config = useRuntimeConfig();
 const selectedRoom302 = ref(null);
 const selectedRoom301 = ref(null);
 const isLoading = ref(false);
 
 const sendRequest = async (room, box, action) => {
-  if (!config.public.cloudflareTunnelUrl) {
-    console.error("Cloudflare Tunnel URL is not configured.");
-    alert(
-      "Cloudflare Tunnel URLが設定されていません。環境変数を確認してください。"
-    );
-    return;
-  }
-
   try {
     isLoading.value = true;
 
@@ -121,24 +112,13 @@ const sendRequest = async (room, box, action) => {
       requestBody.box = box;
     }
 
-    const response = await fetch(config.public.cloudflareTunnelUrl, {
+    // サーバーサイドプロキシ経由でリクエストを送信
+    const response = await $fetch("/api/arduino", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
+      body: requestBody,
     });
 
-    if (!response.ok) {
-      console.error(
-        "Failed to send JSON:",
-        response.status,
-        response.statusText
-      );
-      alert("リクエストの送信に失敗しました");
-    } else {
-      console.log("Request sent successfully");
-    }
+    console.log("Request sent successfully:", response);
   } catch (error) {
     console.error("Error while sending JSON:", error);
     alert("エラーが発生しました: " + error.message);

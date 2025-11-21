@@ -13,6 +13,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     // サーバー側でのみ使用可能
+    arduinoUrl: process.env.ARDUINO_URL || "",
     public: {
       // クライアント側でも使用可能（NUXT_PUBLIC_ プレフィックス付き）
       cloudflareTunnelUrl: process.env.NUXT_PUBLIC_CLOUDFLARE_TUNNEL_URL || "",

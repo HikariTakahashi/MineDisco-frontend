@@ -30,7 +30,6 @@
 <script setup>
 const route = useRoute();
 const router = useRouter();
-const config = useRuntimeConfig();
 const productNumber = ref(null);
 const room = ref(null);
 const box = ref(null);
@@ -39,74 +38,44 @@ const isLoading = ref(false);
 const handleClick = async () => {
   // 新しい形式（room + box）が利用可能な場合はそれを使用
   if (room.value && box.value != null) {
-    if (!config.public.cloudflareTunnelUrl) {
-      console.error("Cloudflare Tunnel URL is not configured.");
-      alert(
-        "Cloudflare Tunnel URLが設定されていません。環境変数を確認してください。"
-      );
-      return;
-    }
-
     try {
       isLoading.value = true;
 
-      const response = await fetch(config.public.cloudflareTunnelUrl, {
+      // サーバーサイドプロキシ経由でリクエストを送信
+      const response = await $fetch("/api/arduino", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+        body: {
           room: room.value,
           box: box.value,
           action: "set",
-        }),
+        },
       });
 
-      if (!response.ok) {
-        console.error(
-          "Failed to send JSON:",
-          response.status,
-          response.statusText
-        );
-      }
+      console.log("Request sent successfully:", response);
     } catch (error) {
       console.error("Error while sending JSON:", error);
+      alert("リクエストの送信に失敗しました: " + error.message);
     } finally {
       isLoading.value = false;
       router.push(`/please-wait?productNumber=${box.value}`);
     }
   } else if (productNumber.value != null) {
     // 後方互換性: productNumber形式
-    if (!config.public.cloudflareTunnelUrl) {
-      console.error("Cloudflare Tunnel URL is not configured.");
-      alert(
-        "Cloudflare Tunnel URLが設定されていません。環境変数を確認してください。"
-      );
-      return;
-    }
-
     try {
       isLoading.value = true;
 
-      const response = await fetch(config.public.cloudflareTunnelUrl, {
+      // サーバーサイドプロキシ経由でリクエストを送信
+      const response = await $fetch("/api/arduino", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+        body: {
           productNumber: productNumber.value,
-        }),
+        },
       });
 
-      if (!response.ok) {
-        console.error(
-          "Failed to send JSON:",
-          response.status,
-          response.statusText
-        );
-      }
+      console.log("Request sent successfully:", response);
     } catch (error) {
       console.error("Error while sending JSON:", error);
+      alert("リクエストの送信に失敗しました: " + error.message);
     } finally {
       isLoading.value = false;
       router.push(`/please-wait?productNumber=${productNumber.value}`);
